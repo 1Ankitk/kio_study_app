@@ -4,16 +4,23 @@ import audioFile from '../assets/audio1.mp3';
 
 const Home = () => {
   const [showMessage, setShowMessage] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef(null);
 
   const deliverMessage = () => {
     setShowMessage(true);
-
     // Play audio
     if (audioRef.current) {
       audioRef.current.play().catch((error) => {
         console.error('Autoplay prevented:', error);
       });
+    }
+  };
+  const toggleMute = () => {
+    const newMutedState = !isMuted;
+    setIsMuted(newMutedState);
+    if (audioRef.current) {
+      audioRef.current.muted = newMutedState;
     }
   };
 
@@ -42,9 +49,17 @@ const Home = () => {
           </>
         )}
       </div>
+      <div className='mute-button'>
+        <button className='mute_unmute'
+          onClick={toggleMute}
+          type="button">{isMuted ? 'Unmute' : 'Mute'}
+          
+        </button>
+      </div>
+
 
       {/* Audio Element */}
-      <audio ref={audioRef}>
+      <audio id="myAudio" ref={audioRef}>
         <source src={audioFile} type="audio/mp3" />
         Your browser does not support the audio tag.
       </audio>
