@@ -69,3 +69,7 @@
   padding: 10px;
   border-radius: 10px;
 }
+.mute_unmute {
+  color: white;
+  background-color: #773232;
+}
