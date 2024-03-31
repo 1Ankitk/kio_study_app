@@ -1,14 +1,13 @@
 import { NavLink } from "react-router-dom";
-import { FaBars, FaHome, FaLock, FaMoneyBill, FaUser } from "react-icons/fa";
+import { FaBars, FaHome } from "react-icons/fa";
 import { MdMessage } from "react-icons/md";
 import { MdAccessTime } from 'react-icons/md';
-import { BiAnalyse, BiSearch } from "react-icons/bi";
-import { BiCog } from "react-icons/bi";
-import { AiFillHeart, AiTwotoneFileExclamation } from "react-icons/ai";
-import { BsCartCheck } from "react-icons/bs";
+import { BiSearch } from "react-icons/bi";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import SidebarMenu from "./SidebarMenu";
+import { useNavigate } from 'react-router-dom';
+
 const routes = [
   {
     path: "/",
@@ -25,12 +24,36 @@ const routes = [
     name: "Pomodoro",
     icon: <MdAccessTime />,
   },
-  
+
 ];
 
 const SideBar = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
+
+  const [isSets, setIsSets] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSearch = (event) => {
+    if (event.key === 'Enter' || event.type === 'click') {
+      const searchQuery = event.target.value;
+      handleSearchQuery(searchQuery);
+    }
+  };
+
+  const handleSearchQuery = (searchQuery) => {
+    if (searchQuery.toLowerCase() === 'home') {
+      navigate('/');
+    } else if (searchQuery.toLowerCase() === 'todo') {
+      navigate('/todo');
+    } else if (searchQuery.toLowerCase() === 'pomodoro') {
+      navigate('/pomodoro');
+    } else {
+      navigate('*')
+    }
+  };
+
+
   const inputAnimation = {
     hidden: {
       width: 0,
@@ -100,18 +123,20 @@ const SideBar = ({ children }) => {
             </div>
           </div>
           <div className="search">
-            <div className="search_icon">
+            <div className="search_icon" onClick={() => setIsSets(!isSets)}>
               <BiSearch />
             </div>
-            <AnimatePresence>
+            <AnimatePresence initial={false} mode='wait'>
               {isOpen && (
                 <motion.input
+                  key="searchInput"
                   initial="hidden"
                   animate="show"
-                  exit="hidden"
+                  exit="exit"
                   variants={inputAnimation}
                   type="text"
                   placeholder="Search"
+                  onKeyDown={handleSearch}
                 />
               )}
             </AnimatePresence>
